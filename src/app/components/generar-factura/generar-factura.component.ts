@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Cliente } from 'src/app/models/Cliente';
 import { Detalle } from 'src/app/models/Detalle';
 import { Factura } from 'src/app/models/Factura';
@@ -33,7 +34,7 @@ export class GenerarFacturaComponent implements OnInit {
 
   public detalles: Detalle[] = [];
   constructor(private clienteService: ClienteService, private productoService: ProductoService, private facturaService: FacturaService, 
-    private detalleService: DetalleService, private router:Router) {
+    private detalleService: DetalleService, private router:Router,private toastr:ToastrService) {
     this.clienteService.getClientes().subscribe(
       res => {
         console.log(res);
@@ -57,7 +58,7 @@ export class GenerarFacturaComponent implements OnInit {
     let sinEspacios = this.nitCliente.replace(" ", "");
     let divisionNumero = sinEspacios.split('-');
     if (divisionNumero.length != 2) {
-      alert('NIT incorrecto: Formato #########-##');
+      this.toastr.error('NIT incorrecto: Formato #########-##','ERROR!');
     }
     let multiplicador = 2;
     let resultadoMultSumado: number = 0;
@@ -70,7 +71,7 @@ export class GenerarFacturaComponent implements OnInit {
     if ((residuoResta == 11 && parseInt(divisionNumero[1]) == 0) || (residuoResta == parseInt(divisionNumero[1]))) {
       this.validarCliente();
     } else {
-      alert('NIT invalido');
+      this.toastr.error('NIT invalido', 'ERROR!');
       return;
     }
   }
@@ -87,24 +88,24 @@ export class GenerarFacturaComponent implements OnInit {
         this.verificado=true;
       },
       err => {
-        alert("Ocurrio un error en el servidor / No se pueden obtener los clientes");
+        this.toastr.error("Ocurrio un error en el servidor / No se pueden obtener los clientes", 'ERROR!');
       }
     );
   }
 
   generarCliente() {
     if (this.cliente.nombre == '') {
-      alert('Llene el campo nombre!');
+      this.toastr.error('Llene el campo nombre!', 'ERROR!');
       return;
     }
     this.cliente.nitCliente = this.nitCliente.replace(" ", "");
     this.clienteService.postCliente(this.cliente).subscribe(
       res => {
-        alert('Cliente Creado con exito');
+        this.toastr.success('Cliente Creado con exito', 'Exito!');
         this.verificado = true;
       },
       err => {
-        alert('Error al crear cliente');
+        this.toastr.error('Error al crear cliente', 'ERROR!');
       }
     );
   }
@@ -113,7 +114,7 @@ export class GenerarFacturaComponent implements OnInit {
       res => {
         let productoRespuesta: Producto = <Producto>res;
         if (productoRespuesta == null || productoRespuesta == undefined) {
-          alert('No existe el producto con el codigo: ' + this.idNuevoProducto);
+          this.toastr.error('No existe el producto con el codigo: ' + this.idNuevoProducto, 'ERROR!');
           return;
         }
         let detalleNuevo: Detalle = {
@@ -129,7 +130,7 @@ export class GenerarFacturaComponent implements OnInit {
         this.total = this.total + this.cantNuevoProducto * productoRespuesta.precio;
       },
       err => {
-        alert('Error al comunicarse con el servidor');
+        this.toastr.error('Error al comunicarse con el servidor', 'ERROR!');
       }
     );
   }
@@ -145,7 +146,7 @@ export class GenerarFacturaComponent implements OnInit {
         }
       },
       err => {
-        alert('No se pudieron obtener los id de facturas');
+        this.toastr.error('No se pudieron obtener los id de facturas', 'ERROR!');
       }
     );
     let encontrado = false;
@@ -181,13 +182,13 @@ export class GenerarFacturaComponent implements OnInit {
       res=>{
         this.detalleService.postDetalles(detalleEnvio).subscribe(
           res=>{
-            alert('Factura Creada con exito');
+            this.toastr.success('Factura Creada con exito', 'Exito!');
             this.router.navigate(['/todasFacturas']);
           },
           err=>{
             this.facturaService.deleteFactura(this.numeroFac).subscribe(
               res=>{
-                alert('Factura rechazada');
+                this.toastr.error('Factura rechazada', 'ERROR!');
               },
               err=>{
                 console.log('Internal Detalle');
@@ -199,7 +200,7 @@ export class GenerarFacturaComponent implements OnInit {
         
       },
       err=>{
-        alert('Factura rechazada!');
+        this.toastr.error('Factura rechazada!', 'ERROR!');
       }
     );
     

@@ -5,6 +5,7 @@ import { ClienteService } from 'src/app/services/clienteServices/cliente.service
 import { FacturaService } from 'src/app/services/facturaServices/factura.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExporterService } from 'src/app/services/exporterServices/exporter.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class TodasFacturasComponent implements OnInit {
     this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
   }
 
-  constructor(private facturaService: FacturaService, private clienteService: ClienteService, private exporterService:ExporterService) {
+  constructor(private facturaService: FacturaService, private clienteService: ClienteService, private exporterService:ExporterService, private toastr:ToastrService) {
     this.traerFacturas();
     this.traerClientes();
     this.dataSource = new MatTableDataSource(this.facturas);
@@ -61,7 +62,7 @@ export class TodasFacturasComponent implements OnInit {
         return facturas;
       },
       err => {
-        alert('No se pudieron obtener los id de facturas');
+        this.toastr.error('No se pudieron obtener los id de facturas', 'ERROR!');
         let fac: Factura[] = [];
         return fac;
       }

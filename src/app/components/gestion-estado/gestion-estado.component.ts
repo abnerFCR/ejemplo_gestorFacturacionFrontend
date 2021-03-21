@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Cliente } from 'src/app/models/Cliente';
 import { Factura } from 'src/app/models/Factura';
 import { ClienteService } from 'src/app/services/clienteServices/cliente.service';
@@ -15,7 +16,7 @@ export class GestionEstadoComponent implements OnInit {
   public facturas:Factura[]=[];
   public clientes:Cliente[]=[];
 
-  constructor(private facturaService:FacturaService, private clienteService:ClienteService, private router:Router) {
+  constructor(private facturaService:FacturaService, private clienteService:ClienteService, private router:Router, private toastr:ToastrService) {
     this.traerClientes();
     this.traerFacturas();
   }
@@ -45,7 +46,7 @@ export class GestionEstadoComponent implements OnInit {
         }
       },
       err => {
-        alert('No se pudieron obtener los id de facturas');
+        this.toastr.error('No se pudieron obtener los id de facturas', 'ERROR!');
       }
     );
     
@@ -65,22 +66,22 @@ export class GestionEstadoComponent implements OnInit {
     factura.idEstado = 2;
     this.facturaService.putFactura(factura, factura.idFactura).subscribe(
       res=>{
-        alert('Factura anulada con exito');
+        this.toastr.success('Factura anulada con exito','Exito!');
         this.traerFacturas();
       },
       errr=>{
-        alert('Error al actualizar factura');
+        this.toastr.error('Error al actualizar factura', 'ERROR!');
       }
     );
   }
   eliminar(idFactura:any){
     this.facturaService.deleteFactura(idFactura).subscribe(
       res=>{
-        alert('Factura eliminada con exito');
+        this.toastr.success('Factura eliminada con exito', 'Exito!');
         this.router.navigate(['/todasFacturas']);
       },
       errr=>{
-        alert('Error al eliminar factura');
+        this.toastr.error('Error al eliminar factura', 'ERROR!');
       }
     );
   }

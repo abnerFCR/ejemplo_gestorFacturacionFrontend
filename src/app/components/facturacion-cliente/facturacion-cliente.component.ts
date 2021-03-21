@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Cliente, ClienteRepo } from 'src/app/models/Cliente';
 import { Factura } from 'src/app/models/Factura';
 import { ClienteService } from 'src/app/services/clienteServices/cliente.service';
@@ -15,7 +16,8 @@ export class FacturacionClienteComponent implements OnInit {
  
   public facturas:Factura[]=[];
   public clientes:ClienteRepo[]=[];
-  constructor(private facturaService:FacturaService, private clienteService:ClienteService, private router:Router) {
+  constructor(private facturaService:FacturaService, private clienteService:ClienteService, private router:Router,
+    private toastr:ToastrService) {
     this.traerClientes();
     this.traerFacturas();
     this.completarInfo();
@@ -31,7 +33,7 @@ export class FacturacionClienteComponent implements OnInit {
         this.clientes = <ClienteRepo[]>res;
       },
       err => {
-        console.log('No se pudieron obtener los datos de la API');
+        this.toastr.error('No se pudieron obtener los datos de la API','ERROR!')
       }
     );
   }
@@ -48,7 +50,7 @@ export class FacturacionClienteComponent implements OnInit {
         this.completarInfo();
       },
       err => {
-        alert('No se pudieron obtener los id de facturas');
+        this.toastr.error('No se pudieron obtener los id de facturas','ERROR!');
       }
     );
     
