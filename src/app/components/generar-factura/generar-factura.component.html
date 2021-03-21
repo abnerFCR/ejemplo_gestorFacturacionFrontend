@@ -1,0 +1,111 @@
+<div class="container">
+
+    <div class="ml-auto" style="margin-top:5%; text-align: center; margin-bottom: 5%;">
+        <h1>Generacion Factura</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <fieldset disabled="">
+                    <label class="control-label" for="fecha">Fecha</label>
+                    <input disabled="" class="form-control" id="fecha" type="text" [(ngModel)]="dateDay">
+                </fieldset>
+            </div>
+        </div>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <fieldset disabled="">
+                    <label class="control-label" for="numeroFactura">No. Factura</label>
+                    <input disabled="" class="form-control" id="numeroFactura" type="text" [(ngModel)]="numeroFac">
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="nombreCliente">Nombre del Cliente</label>
+                <input class="form-control" id="nombreCliente" aria-describedby="nombreHelp" type="text"
+                    placeholder="Escriba el nombre del Cliente" [(ngModel)]="cliente.nombre">
+
+            </div>
+        </div>
+        <div class="align-self-center col-lg-1">
+            <!--<button class="btn btn-info btn-lg" type="button" (click)="nuevoCliente()">Nuevo</button> -->
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <fieldset>
+                    <label class="control-label" for="nitCliente">NIT</label>
+                    <input class="form-control" id="nitCliente" type="text" [(ngModel)]="nitCliente" [disabled]='verificado'>
+                </fieldset>
+            </div>
+        </div>
+        <div class="align-self-center col-lg-1">
+            <button class="btn btn-primary btn-lg" type="button" (click)='validarNit()'>Validar</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <small class="form-text text-muted" id="nombreHelp">Presione el boton "Validar" para validar el NIT e
+                ingresar un nuevo cliente o bien para validar el nit de un cliente existente. (No es necesario escribir el nombre si el cliente ya existe)</small>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 5%;">
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Codigo Producto</th>
+                <th scope="col">Nombre Producto</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">SubTotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-active" *ngFor="let  detalle of detalles">
+                <th scope="row">{{detalle.idProducto}}</th>
+                <td>{{detalle.nombreProducto}}</td>
+                <td>{{detalle.precio}}</td>
+                <td>{{detalle.cantidad}}</td>
+                <td>{{detalle.subtotal}}</td>
+              </tr>
+              <tr class="table-active">
+                <th scope="row"><input class="form-control" id="idNuevoProducto" type="text" [(ngModel)]="idNuevoProducto"></th>
+                <td></td>
+                <td></td>
+                <td><input  class="form-control" id="cantNuevoProducto" type="text" [(ngModel)]="cantNuevoProducto"></td>
+                <td></td>
+              </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="align-self-center col-lg-1">
+                <button class="btn btn-primary btn-lg" type="button" (click)='agregarProducto()'>Agregar</button>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            
+            
+        </div>
+        <div class="col-lg-2 align-self-center">
+            <label class="control-label" for="total">Total</label>
+                    <input disabled="" class="form-control" id="total" type="text" [(ngModel)]="total">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6"></div>
+        <div class="col-lg-6">
+            <div class="align-self-center col-lg-1">
+                <button class="btn btn-primary btn-lg" type="button" (click)='facturar()' [disabled]='!verificado'>Facturar</button>
+            </div>
+        </div>
+        <div class="col-lg-6"></div>
+    </div>
+</div>
